@@ -1,36 +1,47 @@
-import React, { useRef } from 'react';
+// BookForm.tsx
+import React, { useState } from 'react';
 import './BookForm.scss';
 
 type BookFormProps = {
-  onAddBook: (book: { id: number; title: string; author: string; year: number }) => void;
+  onAddBook: (book: { title: string; author: string; year: number }) => void;
 };
 
 const BookForm: React.FC<BookFormProps> = ({ onAddBook }) => {
-  const titleRef = useRef<HTMLInputElement>(null);
-  const authorRef = useRef<HTMLInputElement>(null);
-  const yearRef = useRef<HTMLInputElement>(null);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [year, setYear] = useState(0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (titleRef.current && authorRef.current && yearRef.current) {
-      const newBook = {
-        id: Date.now(),
-        title: titleRef.current.value,
-        author: authorRef.current.value,
-        year: parseInt(yearRef.current.value, 10),
-      };
-      onAddBook(newBook);
-      titleRef.current.value = '';
-      authorRef.current.value = '';
-      yearRef.current.value = '';
-    }
+    onAddBook({ title, author, year });
+    setTitle('');
+    setAuthor('');
+    setYear(0);
   };
 
   return (
     <form className="book-form" onSubmit={handleSubmit}>
-      <input ref={titleRef} type="text" placeholder="Book Title" required />
-      <input ref={authorRef} type="text" placeholder="Book Author" required />
-      <input ref={yearRef} type="number" placeholder="Year of Production" required />
+      <input
+        type="text"
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        placeholder="Book Title"
+        required
+      />
+      <input
+        type="text"
+        value={author}
+        onChange={e => setAuthor(e.target.value)}
+        placeholder="Book Author"
+        required
+      />
+      <input
+        type="number"
+        value={year}
+        onChange={e => setYear(parseInt(e.target.value))}
+        placeholder="Year of Publication"
+        required
+      />
       <button type="submit">Add Book</button>
     </form>
   );
